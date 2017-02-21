@@ -42,11 +42,9 @@ function onError(error) {
  * Event listener for HTTP server 'listening' event.
  */
 function onListening() {
-  // var addr = server.address()
-  // var bind = typeof addr === 'string' ?
-  //     'pipe ' + addr :
-  //     'port ' + addr.port
-  // debug('Listening on ' + bind)
   debug(`env is ${config.env}`)
-  debug(`listening on ${config.host}:${config.port}`)
+  var addr = server.address()
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
+  debug('listening on ' + bind)
+  // debug(`listening on ${config.host}:${config.port}`)
 }

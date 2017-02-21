@@ -5,7 +5,7 @@ const Todo = mongoose.model('Todo', {
     type: String,
     required: true,
     trim: true,
-    minlenght: 3
+    minlength: 3
   },
   isCompleted: {
     type: Boolean,
@@ -16,3 +16,5 @@ const Todo = mongoose.model('Todo', {
     default: null
   }
 })
+
+module.exports = Todo

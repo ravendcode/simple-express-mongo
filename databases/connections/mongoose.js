@@ -2,16 +2,17 @@ const mongoose = require('mongoose')
 const debug = require('debug')('app:mongodb')
 const {
   env,
-  mongoUri
+  mongoDbUri
 } = require('../../config')
 
-// mongoose.connect(mongoUri, {
+// mongoose.connect(mongoDbUri, {
 //     auth: {
 //         authdb: 'admin'
 //     }
 // })
 
-mongoose.connect(mongoUri)
+mongoose.Promise = global.Promise
+mongoose.connect(mongoDbUri)
 
 if (env === 'development') {
   mongoose.set('debug', true)

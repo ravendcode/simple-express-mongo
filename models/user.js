@@ -5,6 +5,8 @@ const User = mongoose.model('User', {
     type: String,
     required: true,
     trim: true,
-    minlenght: 3
+    minlength: 3
   }
 })
+
+module.exports = User

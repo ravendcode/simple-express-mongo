@@ -1,26 +1,25 @@
 const utils = require('./utils')
 
 var env = process.env.NODE_ENV || 'development'
-var host = 'app.dev'
+// var env = 'production'
 var port = utils.normalizePort(process.env.PORT || '80')
 
-const mongoHost = process.env.MONGO_HOST || 'localhost'
-const mongoDb = process.env.MONGO_DB || 'startexpress'
-const mongoPort = utils.normalizePort(process.env.MONGO_PORT || 27017)
-const mongoUser = process.env.MONGO_USER
-const mongoPassword = process.env.MONGO_PASSWORD
-const mongoUri = `mongodb://${mongoUser}:${mongoPassword}@${mongoHost}:${mongoPort}/${mongoDb}`
+let mongoDbName = process.env.MONGODB_NAME || 'startexpress'
+// const mongoDbHost = process.env.MONGODB_HOST || 'localhost'
+// const mongoDbPort = utils.normalizePort(process.env.MONGODB_PORT || 27017)
+// const mongoDbUser = process.env.MONGODB_USER
+// const mongoDbPassword = process.env.MONGODB_PASSWORD
 
-if (process.env.NODE_ENV === 'production') {
-  env = 'production'
-  host = 'localhost'
-} else if (process.env.NODE_ENV === 'test') {
-  env = 'test'
+if (process.env.NODE_ENV === 'test') {
+  mongoDbName += '_test'
+  console.log(`env is ${env}`)
 }
+
+// const mongoDbUri = process.env.MONGODB_URI || `mongodb://${mongoDbUser}:${mongoDbPassword}@${mongoDbHost}:${mongoDbPort}/${mongoDbName}`
+const mongoDbUri = process.env.MONGODB_URI || `mongodb://localhost/${mongoDbName}`
 
 module.exports = {
   env,
-  host,
   port,
-  mongoUri,
+  mongoDbUri,
 }
