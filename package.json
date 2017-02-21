@@ -1,0 +1,30 @@
+{
+  "name": "start-express-mongo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./bin/www",
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "set DEBUG=app:* & nodemon ./bin/www -e js,hbs",
+    "test": "set NODE_ENV=test& nodemon --exec mocha tests/**/**/*.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.6.1",
+    "express": "^4.14.1",
+    "hbs": "^4.0.1",
+    "mongoose": "^4.8.4",
+    "morgan": "^1.8.1",
+    "serve-favicon": "^2.4.0"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.2.0",
+    "rewire": "^2.5.2",
+    "supertest": "^3.0.0"
+  }
+}
