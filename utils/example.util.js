@@ -1,6 +1,6 @@
 module.exports.add = (a, b) => a + b
 module.exports.asyncAdd = (a, b, cb) => {
-  setInterval(() => {
+  setTimeout(() => {
     cb(a + b)
   }, 200)
 }

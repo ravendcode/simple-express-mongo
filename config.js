@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'test') {
 
 // const mongoDbUri = process.env.MONGODB_URI || `mongodb://${mongoDbUser}:${mongoDbPassword}@${mongoDbHost}:${mongoDbPort}/${mongoDbName}`
 const mongoDbUri = process.env.MONGODB_URI || `mongodb://localhost/${mongoDbName}`
-const salt = process.env.SALT || 'ge9TizVd-ZVCu5DsebgFvKhT1z2stkp4RrGTN26_SsfVLSPA084wKa95uIbRubS1'
+const salt = process.env.SALT || '$2a$10$gK5iJIrl2/drnIpSOLdWpO'
 
 module.exports = {
   env,

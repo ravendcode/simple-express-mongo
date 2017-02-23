@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   let token = req.header('x-auth')
   User.findByToken(token).then((user) => {
     if (!user) {
-      let error = new Error('Bad Token')
+      let error = new Error('No user with this token')
       error.status = 401
       return Promise.reject(error)
     }

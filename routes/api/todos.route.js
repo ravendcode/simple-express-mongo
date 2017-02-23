@@ -7,7 +7,6 @@ const Todo = require('../../models/todo')
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
-  console.log(req.aaa)
   Todo.find().then((todos) => {
     res.send({
       todos
@@ -98,7 +97,7 @@ router.delete('/:id', (req, res, next) => {
 })
 
 router.param('id', function (req, res, next, id) {
-  let error = new Error('Todo Not Found')
+  let error = new Error('Todo not found')
   error.status = 404
   if (!ObjectID.isValid(id)) {
     return next(error)

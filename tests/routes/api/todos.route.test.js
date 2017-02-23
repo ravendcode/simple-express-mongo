@@ -3,14 +3,11 @@ const expect = require('expect')
 const app = require('../../../app.js')
 const Todo = require('../../../models/todo')
 const {
-  todosSeeder
+  todosSeeder,
+  todosSeeds,
 } = require('../../../databases/seeds/todos.seeder')
 
-beforeEach((done) => {
-  Todo.remove({}).then(() => {
-    return Todo.insertMany(todosSeeder)
-  }).then(() => done())
-})
+beforeEach(todosSeeder)
 
 describe('routes/api/todos.route.js', () => {
   describe('#GET /api/todos', () => {
@@ -19,7 +16,7 @@ describe('routes/api/todos.route.js', () => {
         .get('/api/todos')
         .expect(200)
         .expect((res) => {
-          expect(res.body.todos.length).toBe(todosSeeder.length)
+          expect(res.body.todos.length).toBe(todosSeeds.length)
         })
         .end(done)
     })
@@ -39,8 +36,8 @@ describe('routes/api/todos.route.js', () => {
             return done(err)
           }
           Todo.find().then((todos) => {
-            expect(todos.length).toBe(todosSeeder.length + 1)
-            expect(todos[todosSeeder.length].text).toBe(newTodo.text)
+            expect(todos.length).toBe(todosSeeds.length + 1)
+            expect(todos[todosSeeds.length].text).toBe(newTodo.text)
             done()
           }).catch((e) => done(e))
         })
@@ -58,7 +55,7 @@ describe('routes/api/todos.route.js', () => {
             return done(err)
           }
           Todo.find().then((todos) => {
-            expect(todos.length).toBe(todosSeeder.length)
+            expect(todos.length).toBe(todosSeeds.length)
             done()
           }).catch((e) => done(e))
         })
@@ -68,10 +65,10 @@ describe('routes/api/todos.route.js', () => {
   describe('#GET /api/todos/:id', () => {
     it('should return a todo', (done) => {
       request(app)
-        .get('/api/todos/' + todosSeeder[0]._id)
+        .get('/api/todos/' + todosSeeds[0]._id)
         .expect(200)
         .expect((res) => {
-          expect(res.body.todo).toInclude(todosSeeder[0])
+          expect(res.body.todo).toInclude(todosSeeds[0])
         })
         .end(done)
     })
@@ -91,7 +88,7 @@ describe('routes/api/todos.route.js', () => {
         isCompleted: true
       }
       request(app)
-        .patch('/api/todos/' + todosSeeder[0]._id)
+        .patch('/api/todos/' + todosSeeds[0]._id)
         .send(obj)
         .expect(200)
         .expect((res) => {
@@ -108,7 +105,7 @@ describe('routes/api/todos.route.js', () => {
         isCompleted: false
       }
       request(app)
-        .patch('/api/todos/' + todosSeeder[1]._id)
+        .patch('/api/todos/' + todosSeeds[1]._id)
         .send(obj)
         .expect(200)
         .expect((res) => {
@@ -123,17 +120,17 @@ describe('routes/api/todos.route.js', () => {
   describe('#DELETE /api/todos/:id', () => {
     it('should remove a todo', (done) => {
       request(app)
-        .delete('/api/todos/' + todosSeeder[0]._id)
+        .delete('/api/todos/' + todosSeeds[0]._id)
         .expect(200)
         .expect((res) => {
-          expect(res.body.todo).toInclude(todosSeeder[0])
+          expect(res.body.todo).toInclude(todosSeeds[0])
         })
         .end((err, res) => {
           if (err) {
             return done(err)
           }
 
-          Todo.findById(todosSeeder[0]._id).then((todo) => {
+          Todo.findById(todosSeeds[0]._id).then((todo) => {
             expect(todo).toNotExist()
             done()
           }).catch((e) => done(e))

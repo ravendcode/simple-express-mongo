@@ -1,9 +1,9 @@
 const express = require('express')
-const authMdw = require('../../middlewares/auth')
-const {
-  ObjectID
-} = require('mongodb')
 const _ = require('lodash')
+const authMiddleware = require('../../middlewares/auth.middleware')
+// const {
+//   ObjectID
+// } = require('mongodb')
 const User = require('../../models/user')
 const router = express.Router()
 
@@ -16,8 +16,8 @@ const router = express.Router()
 //   }).catch((e) => next(e))
 // })
 
-router.get('/me', authMdw, (req, res, next) => {
-  res.send(req.user)
+router.get('/me', authMiddleware, (req, res, next) => {
+  res.send({user: req.user})
 })
 
 router.post('/', (req, res, next) => {
@@ -34,93 +34,21 @@ router.post('/', (req, res, next) => {
   })
 })
 
+router.post('/login', (req, res, next) => {
+  let body = _.pick(req.body, ['email', 'password'])
+  User.findByCredentials(body.email, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send({
+        user
+      })
+    })
+  }).catch((e) => next(e))
+})
 
-// router.get('/:id', (req, res, next) => {
-//   res.send({
-//     todo: req.todo
-//   })
-//   // Todo.findById(req.params.id).then((todo) => {
-//   //   if (!todo) {
-//   //     return res.status(404).send({
-//   //       error: 'Todo not found'
-//   //     })
-//   //   }
-//   //   res.send({
-//   //     todo
-//   //   })
-//   // }).catch((e) => {
-//   //   res.status(500).send()
-//   // })
-// })
-
-// router.patch('/:id', (req, res, next) => {
-//   let body = _.pick(req.body, ['text', 'isCompleted'])
-//   if (_.isBoolean(body.isCompleted) && body.isCompleted) {
-//     body.completedAt = new Date().getTime()
-//   } else {
-//     body.isCompleted = false
-//     body.completedAt = null
-//   }
-//   _.extend(req.todo, body)
-
-//   req.todo.save().then((todo) => {
-//     res.send({
-//       todo
-//     })
-//   }).catch((e) => next(e))
-
-//   // Todo.findByIdAndUpdate(req.params.id, {
-//   //   $set: body
-//   // }, {
-//   //   new: true
-//   // }).then((todo) => {
-//   //   if (!todo) {
-//   //     return res.status(404).send({
-//   //       error: 'Todo not found'
-//   //     })
-//   //   }
-//   //   res.send({
-//   //     todo
-//   //   })
-//   // }).catch((e) => {
-//   //   res.status(500).send()
-//   // })
-// })
-
-// router.delete('/:id', (req, res, next) => {
-//   req.todo.remove().then((todo) => {
-//     res.send({
-//       todo
-//     })
-//   }).catch((e) => next(e))
-//   // Todo.findByIdAndRemove(req.params.id).then((todo) => {
-//   //   if (!todo) {
-//   //     return res.status(404).send({
-//   //       error: 'Todo not found'
-//   //     })
-//   //   }
-//   //   res.send({
-//   //     todo
-//   //   })
-//   // }).catch((e) => {
-//   //   res.status(500).send()
-//   // })
-// })
-
-// router.param('id', function (req, res, next, id) {
-//   let error = new Error('Todo Not Found')
-//   error.status = 404
-//   if (!ObjectID.isValid(id)) {
-//     return next(error)
-//   }
-
-//   Todo.findById(id).then((todo) => {
-//     if (!todo) {
-//       return next(error)
-//     }
-//     req.todo = todo
-//     next()
-//   }).catch((e) => next(e))
-// })
+router.delete('/me/token', authMiddleware, (req, res, next) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send()
+  }).catch((e) => next(e))
+})
 
 module.exports = router

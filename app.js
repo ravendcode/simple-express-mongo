@@ -38,6 +38,9 @@ app.locals.app = {
 
 // Seeds
 if (config.env === 'development') {
+  require('./databases/seeds/users.seeder').usersSeeder(() => {
+
+  })
   // require('./databases/seeds/todos.seeder').seed()
 }
 
@@ -46,14 +49,14 @@ app.use((req, res, next) => {
   req.db = db
   next()
 })
-// app.use(require('./middlewares/log'))
+// app.use(require('./middlewares/log.middleware'))
 
 // Routes
 require('./routes')(app)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  var err = new Error('Not Found')
+  var err = new Error('Not found')
   err.status = 404
   next(err)
 })
@@ -79,7 +82,9 @@ app.use(function (err, req, res, next) {
   if (config.env === 'development' && status !== 404) {
     error.stack = err.stack
   }
-  res.status(status).send({error})
+  res.status(status).send({
+    error
+  })
 })
 
 module.exports = app
