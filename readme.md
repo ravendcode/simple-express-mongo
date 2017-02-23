@@ -1,8 +1,9 @@
 # Start Node Express Application
 
 ### Features
-1. Api
-2. Mongooose
+1. API
+2. JWT
+2. Mongoose
 3. Middlewares
 4. Templates
 5. Tests
