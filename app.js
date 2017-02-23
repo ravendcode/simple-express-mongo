@@ -42,7 +42,11 @@ if (config.env === 'development') {
 }
 
 // Global middlewares
-// app.use(require('./middlewares/log')())
+app.use((req, res, next) => {
+  req.db = db
+  next()
+})
+// app.use(require('./middlewares/log'))
 
 // Routes
 require('./routes')(app)
@@ -66,13 +70,16 @@ app.use(function (err, req, res, next) {
   // res.render('error')
 
   // For API
+  let message = err.message
+  let status = err.status || 500
   let error = {
-    message: err.message,
+    message,
+    status
   }
-  if (config.env === 'development' && err.status !== 404) {
+  if (config.env === 'development' && status !== 404) {
     error.stack = err.stack
   }
-  res.status(err.status || 500).send({error})
+  res.status(status).send({error})
 })
 
 module.exports = app

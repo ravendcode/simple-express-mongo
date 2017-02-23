@@ -7,6 +7,7 @@ const Todo = require('../../models/todo')
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
+  console.log(req.aaa)
   Todo.find().then((todos) => {
     res.send({
       todos
