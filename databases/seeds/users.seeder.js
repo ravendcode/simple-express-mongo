@@ -28,7 +28,7 @@ const usersSeeds = [{
   tokens: [{
     access: 'auth',
     token: jwt.sign({
-      _id: userId,
+      _id: userId1,
       access: 'auth'
     }, config.salt)
   }]
@@ -45,5 +45,7 @@ const usersSeeder = (done) => {
 
 module.exports = {
   usersSeeder,
-  usersSeeds
+  usersSeeds,
+  userId,
+  userId1
 }

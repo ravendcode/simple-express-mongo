@@ -2,7 +2,7 @@ const utils = require('./utils')
 
 var env = process.env.NODE_ENV || 'development'
 // var env = 'production'
-var port = utils.normalizePort(process.env.PORT || '80')
+var port = utils.normalizePort(process.env.PORT || 80)
 
 let mongoDbName = process.env.MONGODB_NAME || 'startexpress'
 // const mongoDbHost = process.env.MONGODB_HOST || 'localhost'

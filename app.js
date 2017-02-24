@@ -38,10 +38,9 @@ app.locals.app = {
 
 // Seeds
 if (config.env === 'development') {
-  require('./databases/seeds/users.seeder').usersSeeder(() => {
-
-  })
-  // require('./databases/seeds/todos.seeder').seed()
+  // require('./databases/seeds/users.seeder').usersSeeder(() => {
+  //   require('./databases/seeds/todos.seeder').todosSeeder(() => {})
+  // })
 }
 
 // Global middlewares

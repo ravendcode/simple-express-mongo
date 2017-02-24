@@ -7,7 +7,7 @@ const Todo = require('../../models/todo')
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
-  Todo.find().then((todos) => {
+  Todo.find({_creator: req.user._id}).then((todos) => {
     res.send({
       todos
     })
@@ -16,7 +16,8 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   new Todo({
-    text: req.body.text
+    text: req.body.text,
+    _creator: req.user._id
   }).save().then((todo) => {
     res.status(201).send({
       todo
@@ -28,6 +29,7 @@ router.get('/:id', (req, res, next) => {
   res.send({
     todo: req.todo
   })
+
   // Todo.findById(req.params.id).then((todo) => {
   //   if (!todo) {
   //     return res.status(404).send({
@@ -103,7 +105,10 @@ router.param('id', function (req, res, next, id) {
     return next(error)
   }
 
-  Todo.findById(id).then((todo) => {
+  Todo.findOne({
+    _id: id,
+    _creator: req.user._id
+  }).then((todo) => {
     if (!todo) {
       return next(error)
     }

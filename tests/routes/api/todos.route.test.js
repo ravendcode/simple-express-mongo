@@ -7,6 +7,10 @@ const {
   todosSeeds,
 } = require('../../../databases/seeds/todos.seeder')
 
+const {
+  usersSeeds,
+} = require('../../../databases/seeds/users.seeder')
+
 beforeEach(todosSeeder)
 
 describe('routes/api/todos.route.js', () => {
@@ -14,9 +18,10 @@ describe('routes/api/todos.route.js', () => {
     it('should get all todos', (done) => {
       request(app)
         .get('/api/todos')
+        .set('x-auth', usersSeeds[0].tokens[0].token)
         .expect(200)
         .expect((res) => {
-          expect(res.body.todos.length).toBe(todosSeeds.length)
+          expect(res.body.todos.length).toBe(1)
         })
         .end(done)
     })
@@ -27,7 +32,10 @@ describe('routes/api/todos.route.js', () => {
       let newTodo = {
         text: 'test todo'
       }
-      request(app).post('/api/todos').send(newTodo)
+      request(app)
+        .post('/api/todos')
+        .set('x-auth', usersSeeds[0].tokens[0].token)
+        .send(newTodo)
         .expect(201).expect((res) => {
           expect(res.body.todo).toInclude(newTodo)
         })
@@ -46,7 +54,9 @@ describe('routes/api/todos.route.js', () => {
       let newTodo = {
         text: 't'
       }
-      request(app).post('/api/todos').send(newTodo)
+      request(app).post('/api/todos')
+        .send(newTodo)
+        .set('x-auth', usersSeeds[0].tokens[0].token)
         .expect(400).expect((res) => {
           expect(res.body.name).toBe('ValidationError')
         })
@@ -66,6 +76,7 @@ describe('routes/api/todos.route.js', () => {
     it('should return a todo', (done) => {
       request(app)
         .get('/api/todos/' + todosSeeds[0]._id)
+        .set('x-auth', usersSeeds[0].tokens[0].token)
         .expect(200)
         .expect((res) => {
           expect(res.body.todo).toInclude(todosSeeds[0])
@@ -73,9 +84,18 @@ describe('routes/api/todos.route.js', () => {
         .end(done)
     })
 
+    it('should not return todo created by other user', (done) => {
+      request(app)
+        .get('/api/todos/' + todosSeeds[1]._id)
+        .set('x-auth', usersSeeds[0].tokens[0].token)
+        .expect(404)
+        .end(done)
+    })
+
     it('should return not found todo', (done) => {
       request(app)
         .get('/api/todos/11111')
+        .set('x-auth', usersSeeds[0].tokens[0].token)
         .expect(404)
         .end(done)
     })
@@ -89,6 +109,7 @@ describe('routes/api/todos.route.js', () => {
       }
       request(app)
         .patch('/api/todos/' + todosSeeds[0]._id)
+        .set('x-auth', usersSeeds[0].tokens[0].token)
         .send(obj)
         .expect(200)
         .expect((res) => {
@@ -106,6 +127,7 @@ describe('routes/api/todos.route.js', () => {
       }
       request(app)
         .patch('/api/todos/' + todosSeeds[1]._id)
+        .set('x-auth', usersSeeds[1].tokens[0].token)
         .send(obj)
         .expect(200)
         .expect((res) => {
@@ -121,6 +143,7 @@ describe('routes/api/todos.route.js', () => {
     it('should remove a todo', (done) => {
       request(app)
         .delete('/api/todos/' + todosSeeds[0]._id)
+        .set('x-auth', usersSeeds[0].tokens[0].token)
         .expect(200)
         .expect((res) => {
           expect(res.body.todo).toInclude(todosSeeds[0])
@@ -140,6 +163,7 @@ describe('routes/api/todos.route.js', () => {
     it('should return not found todo', (done) => {
       request(app)
         .delete('/api/todos/11111')
+        .set('x-auth', usersSeeds[0].tokens[0].token)
         .expect(404)
         .end(done)
     })
