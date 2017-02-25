@@ -1,11 +1,12 @@
 const mongoose = require('mongoose')
+const i18n = require('i18n')
 
-const Todo = mongoose.model('Todo', {
+let TodoSchema = new mongoose.Schema({
   text: {
     type: String,
-    required: true,
+    required: [true, i18n.__('validation.required %s', i18n.__(`model.text`))],
     trim: true,
-    minlength: 3
+    minlength: [true, i18n.__('validation.minlength %s %s', i18n.__(`model.text`), 3)],
   },
   isCompleted: {
     type: Boolean,
@@ -17,8 +18,10 @@ const Todo = mongoose.model('Todo', {
   },
   _creator: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: [true, i18n.__('validation.required %s', i18n.__(`model._creator`))],
   }
 })
+
+let Todo = mongoose.model('Todo', TodoSchema)
 
 module.exports = Todo

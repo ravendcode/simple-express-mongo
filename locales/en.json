@@ -1,0 +1,23 @@
+{
+	"validation.required %s": "The %s field is required.",
+	"validation.minlength %s %s": "The %s must be at least %s characters.",
+	"validation.maxlength %s %s": "The %s may not be greater than %s characters.",
+	"validation.email %s": "The %s must be a valid email address.",
+	"validation.min %s %s": "The %s must be at least %s.",
+	"validation.max %s %s": "The %s may not be greater than %s.",
+	"validation.notIn %s": "The selected %s is invalid.",
+	"validation.enum %s": "The selected %s is invalid.",
+	"validation.numeric %s": "The %s must be a number.",
+	"validation.match %s": "The %s format is invalid.",
+  "validation.unique %s": "The %s has already been taken.",
+	"model.title": "title",
+	"model.count": "count",
+	"model.price": "price",
+	"model.text": "text",
+	"model.isCompleted": "isCompleted",
+	"model.completedAt": "completedAt",
+	"model._creator": "creator",
+	"model.email": "email",
+	"model.password": "password",
+	"model.username": "username"
+}

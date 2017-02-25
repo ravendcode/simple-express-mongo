@@ -2,11 +2,12 @@
 
 ### Features
 1. API
+2. I18n
 2. JWT
-2. Mongoose
 3. Middlewares
-4. Templates
-5. Tests
+4. Mongoose
+5. Templates
+6. Tests
 
 ### Usage
 1. Edit config.js

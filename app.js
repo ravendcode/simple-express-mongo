@@ -4,16 +4,23 @@ const hbs = require('hbs')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-
+const i18n = require('i18n')
 const config = require('./config')
 const db = require('./databases/connections/mongoose')
 
 const app = express()
 
+i18n.configure({
+  locales: ['en', 'ru'],
+  defaultLocale: 'ru',
+  directory: path.join(__dirname, 'locales')
+})
+
 if (config.env === 'development') {
   app.use(morgan('dev'))
 }
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(i18n.init)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: false

@@ -5,6 +5,7 @@ const authMiddleware = require('../../middlewares/auth.middleware')
 //   ObjectID
 // } = require('mongodb')
 const User = require('../../models/user')
+const Validation = require('../../utils/validation.util')
 const router = express.Router()
 
 // router.get('/', (req, res, next) => {
@@ -17,7 +18,9 @@ const router = express.Router()
 // })
 
 router.get('/me', authMiddleware, (req, res, next) => {
-  res.send({user: req.user})
+  res.send({
+    user: req.user
+  })
 })
 
 router.post('/', (req, res, next) => {
@@ -36,6 +39,21 @@ router.post('/', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   let body = _.pick(req.body, ['email', 'password'])
+  let rules = {
+    email: {
+      required: true,
+      email: true
+    },
+    password: {
+      required: true,
+      minlength: 6
+    }
+  }
+
+  let v = new Validation(body, rules)
+  if (!v.validate()) {
+    return res.status(400).send({errors: v.errors})
+  }
   User.findByCredentials(body.email, body.password).then((user) => {
     return user.generateAuthToken().then((token) => {
       res.header('x-auth', token).send({

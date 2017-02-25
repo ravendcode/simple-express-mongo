@@ -1,0 +1,23 @@
+{
+	"validation.required %s": "Поле %s обязательно для заполнения.",
+	"validation.minlength %s %s": "Количество символов в поле %s должно быть не менее %s.",
+	"validation.maxlength %s %s": "Количество символов в поле %s не может превышать %s.",
+	"validation.email %s": "Поле %s должно быть действительным электронным адресом.",
+	"validation.min %s %s": "Поле %s должно быть не менее %s.",
+	"validation.max %s %s": "Поле %s не может быть более %s.",
+	"validation.notIn %s": "Выбранное значение для %s ошибочно.",
+	"validation.enum %s": "Выбранное значение для %s некорректно.",
+	"validation.numeric %s": "Поле %s должно быть числом.",
+	"validation.match %s": "Поле %s имеет ошибочный формат.",
+	"validation.unique %s": "Такое значение поля %s уже существует.",
+	"model.title": "название",
+	"model.count": "количество",
+	"model.price": "цена",
+	"model.text": "текст",
+	"model.isCompleted": "завершено",
+	"model.completedAt": "время завершения",
+	"model._creator": "создатель",
+	"model.email": "эл. адрес",
+	"model.password": "пароль",
+	"model.username": "имя пользователя"
+}

@@ -1,7 +1,7 @@
 My Tasks:
-	☐ i18n
-	☐ unique todo text
-	☐ validation
-	☐ login validation
+	✔ i18n @done (February 25th 2017, 20:44)
+	✔ email unique @done (February 25th 2017, 22:26)
+	✔ mongoose validation @done (February 25th 2017, 21:13)
+	✔ login validation @done (February 25th 2017, 13:48)
 	✔ jwt @done (February 24th 2017, 20:30)
 	☐ websockets

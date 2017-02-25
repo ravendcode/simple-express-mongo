@@ -2,27 +2,29 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const _ = require('lodash')
-const config = require('../config')
 const bcrypt = require('bcryptjs')
+const i18n = require('i18n')
+const config = require('../config')
 
 let UserSchema = new mongoose.Schema({
+  // unique
   email: {
     type: String,
-    required: true,
+    required: [true, i18n.__('validation.required %s', i18n.__(`model.email`))],
     trim: true,
-    minlength: 3,
-    unique: true,
+    lowercase: true,
+    minlength: [3, i18n.__('validation.minlength %s %s', i18n.__(`model.email`), 3)],
     validate: {
       validator: (value) => {
         return validator.isEmail(value)
       },
-      message: '{VALUE} is not a valid email'
+      message: i18n.__('validation.email %s', i18n.__(`model.email`))
     }
   },
   password: {
     type: String,
-    required: true,
-    minlength: 6
+    required: [true, i18n.__('validation.required %s', i18n.__(`model.password`))],
+    minlength: [6, i18n.__('validation.minlength %s %s', i18n.__(`model.password`), 6)],
   },
   tokens: [{
     access: {
@@ -130,6 +132,22 @@ UserSchema.pre('save', function (next) {
   }
 })
 
+UserSchema.post('save', function (doc) {
+  console.log('%s has been saved', doc._id)
+})
+
 let User = mongoose.model('User', UserSchema)
+
+UserSchema.path('email').validate(function (value, next) {
+  if (!this.isModified('tokens')) {
+    User.find({
+      'email': value.toLowerCase()
+    }, function (err, user) {
+      next(err || user.length === 0)
+    })
+  } else {
+    next()
+  }
+}, i18n.__('validation.unique %s', i18n.__('model.email')))
 
 module.exports = User

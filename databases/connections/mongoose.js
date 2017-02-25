@@ -12,7 +12,7 @@ const {
 // })
 
 mongoose.Promise = global.Promise
-mongoose.connect(mongoDbUri)
+mongoose.connect(mongoDbUri, {config: {autoIndex: env !== 'production'}})
 
 if (env === 'development') {
   mongoose.set('debug', true)
