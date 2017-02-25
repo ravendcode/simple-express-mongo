@@ -132,9 +132,9 @@ UserSchema.pre('save', function (next) {
   }
 })
 
-UserSchema.post('save', function (doc) {
-  console.log('%s has been saved', doc._id)
-})
+// UserSchema.post('save', function (doc) {
+//   console.log('%s has been saved', doc._id)
+// })
 
 let User = mongoose.model('User', UserSchema)
 

@@ -6,7 +6,7 @@ let TodoSchema = new mongoose.Schema({
     type: String,
     required: [true, i18n.__('validation.required %s', i18n.__(`model.text`))],
     trim: true,
-    minlength: [true, i18n.__('validation.minlength %s %s', i18n.__(`model.text`), 3)],
+    minlength: [3, i18n.__('validation.minlength %s %s', i18n.__(`model.text`), 3)],
   },
   isCompleted: {
     type: Boolean,
