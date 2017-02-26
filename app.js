@@ -62,7 +62,7 @@ require('./routes')(app)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  var err = new Error('Not found')
+  var err = new Error(req.__('error.not found'))
   err.status = 404
   next(err)
 })

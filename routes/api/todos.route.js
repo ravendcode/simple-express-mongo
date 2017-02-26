@@ -99,7 +99,7 @@ router.delete('/:id', (req, res, next) => {
 })
 
 router.param('id', function (req, res, next, id) {
-  let error = new Error('Todo not found')
+  let error = new Error(req.__('error.todo not found'))
   error.status = 404
   if (!ObjectID.isValid(id)) {
     return next(error)

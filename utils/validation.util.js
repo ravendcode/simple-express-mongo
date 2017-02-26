@@ -9,61 +9,66 @@ class Validation {
   }
 
   validate() {
-    this.check()
-    if (Object.keys(this.errors).length !== 0) {
-      return false
-    }
-    return true
+    return this.check().then((values) => {
+      if (Object.keys(this.errors).length !== 0) {
+        return Promise.reject({
+          errors: this.errors
+        })
+      }
+    })
   }
 
   check() {
+    let required, email, minlength, maxlength, min, max, notIn, enums, unique, matches, numeric, decimal, error
     for (let field in this.rules) {
       for (let rule in this.rules[field]) {
         switch (rule) {
           case 'required':
-            this.required(field, this.rawData[field], this.rules[field][rule])
-            break
-          case 'type':
+            required = this.required(field, this.rawData[field], this.rules[field][rule])
             break
           case 'email':
-            this.email(field, this.rawData[field], this.rules[field][rule])
+            email = this.email(field, this.rawData[field], this.rules[field][rule])
             break
           case 'minlength':
-            this.minlength(field, this.rawData[field], this.rules[field][rule])
+            minlength = this.minlength(field, this.rawData[field], this.rules[field][rule])
             break
           case 'maxlength':
-            this.maxlength(field, this.rawData[field], this.rules[field][rule])
+            maxlength = this.maxlength(field, this.rawData[field], this.rules[field][rule])
             break
           case 'min':
-            this.min(field, this.rawData[field], this.rules[field][rule])
+            min = this.min(field, this.rawData[field], this.rules[field][rule])
             break
           case 'max':
-            this.max(field, this.rawData[field], this.rules[field][rule])
+            max = this.max(field, this.rawData[field], this.rules[field][rule])
             break
           case 'notIn':
-            this.notIn(field, this.rawData[field], this.rules[field][rule])
+            notIn = this.notIn(field, this.rawData[field], this.rules[field][rule])
             break
           case 'enum':
-            this.enum(field, this.rawData[field], this.rules[field][rule])
+            enums = this.enum(field, this.rawData[field], this.rules[field][rule])
             break
           case 'unique':
-            // this.unique(field, this.rawData[field], this.rules[field][rule])
+            unique = this.unique(field, this.rawData[field], this.rules[field][rule])
             break
           case 'match':
-            this.match(field, this.rawData[field], this.rules[field][rule])
+            matches = this.match(field, this.rawData[field], this.rules[field][rule])
             break
           case 'numeric':
-            this.numeric(field, this.rawData[field], this.rules[field][rule])
+            numeric = this.numeric(field, this.rawData[field], this.rules[field][rule])
+            break
+          case 'decimal':
+            decimal = this.decimal(field, this.rawData[field], this.rules[field][rule])
             break
           default:
-            throw new Error(`Rule ${rule} for ${field} no implements in validation`)
+            let message = `Rule ${rule} for ${field} no implements in validation`
+            error = Promise.reject({error: {message}})
         }
       }
     }
+    return Promise.all([required, email, minlength, maxlength, min, max, notIn, enums, unique, matches, numeric, decimal, error])
   }
 
   required(field, data, ruleValues) {
-    // let message = `The ${field} field is required.`
     let message = i18n.__('validation.required %s', i18n.__(`model.${field}`))
     if (Array.isArray(ruleValues)) {
       message = ruleValues.pop()
@@ -72,44 +77,9 @@ class Validation {
         message = ruleValues
       }
     }
-
     if (data === undefined || data.length <= 0) {
       this.errors[field] = {
         message: message
-      }
-    }
-  }
-
-  minlength(field, data, ruleValues) {
-    if (data !== undefined) {
-      let message = i18n.__('validation.minlength %s %s', i18n.__(`model.${field}`), ruleValues)
-      let values = ruleValues
-      if (Array.isArray(ruleValues)) {
-        message = ruleValues.pop()
-        values = ruleValues
-      }
-
-      if (data.length < values) {
-        this.errors[field] = {
-          message: message
-        }
-      }
-    }
-  }
-
-  maxlength(field, data, ruleValues) {
-    if (data !== undefined) {
-      let message = i18n.__('validation.maxlength %s %s', i18n.__(`model.${field}`), ruleValues)
-      let values = ruleValues
-      if (Array.isArray(ruleValues)) {
-        message = ruleValues.pop()
-        values = ruleValues
-      }
-
-      if (data.length > values) {
-        this.errors[field] = {
-          message: message
-        }
       }
     }
   }
@@ -132,16 +102,47 @@ class Validation {
     }
   }
 
+  minlength(field, data, ruleValues) {
+    if (data !== undefined) {
+      let message = i18n.__('validation.minlength %s %s', i18n.__(`model.${field}`), ruleValues)
+      let value = ruleValues
+      if (Array.isArray(ruleValues)) {
+        message = ruleValues.pop()
+        value = ruleValues[0]
+      }
+      if (data.length < value) {
+        this.errors[field] = {
+          message: message
+        }
+      }
+    }
+  }
+
+  maxlength(field, data, ruleValues) {
+    if (data !== undefined) {
+      let message = i18n.__('validation.maxlength %s %s', i18n.__(`model.${field}`), ruleValues)
+      let value = ruleValues
+      if (Array.isArray(ruleValues)) {
+        message = ruleValues.pop()
+        value = ruleValues[0]
+      }
+      if (data.length > value) {
+        this.errors[field] = {
+          message: message
+        }
+      }
+    }
+  }
+
   min(field, data, ruleValues) {
     if (data !== undefined) {
       let message = i18n.__('validation.min %s %s', i18n.__(`model.${field}`), ruleValues)
-      let values = ruleValues
+      let value = ruleValues
       if (Array.isArray(ruleValues)) {
         message = ruleValues.pop()
-        values = ruleValues
+        value = ruleValues[0]
       }
-      let parseData = parseInt(data, 10)
-      if (parseData && parseData < values) {
+      if (data < value) {
         this.errors[field] = {
           message: message
         }
@@ -152,13 +153,12 @@ class Validation {
   max(field, data, ruleValues) {
     if (data !== undefined) {
       let message = i18n.__('validation.max %s %s', i18n.__(`model.${field}`), ruleValues)
-      let values = ruleValues
+      let value = ruleValues
       if (Array.isArray(ruleValues)) {
         message = ruleValues.pop()
-        values = ruleValues
+        value = ruleValues[0]
       }
-      let parseData = parseInt(data, 10)
-      if (parseData && parseData > values) {
+      if (data > value) {
         this.errors[field] = {
           message: message
         }
@@ -174,7 +174,6 @@ class Validation {
         if (ruleValues[ruleValues.length - 1]) {
           message = ruleValues.pop()
         }
-        values = ruleValues.slice(0, ruleValues.length - 1)
         if (values.some((element, index, array) => element === data)) {
           this.errors[field] = {
             message: message
@@ -192,13 +191,12 @@ class Validation {
 
   enum(field, data, ruleValues) {
     if (data !== undefined) {
-      let message = i18n.__('validation.enums %s', i18n.__(`model.${field}`))
+      let message = i18n.__('validation.enum %s', i18n.__(`model.${field}`))
       let values = ruleValues
       if (Array.isArray(ruleValues)) {
         if (ruleValues[ruleValues.length - 1]) {
           message = ruleValues.pop()
         }
-        values = ruleValues.slice(0, ruleValues.length - 1)
         if (!values.includes(data)) {
           this.errors[field] = {
             message: message
@@ -232,58 +230,61 @@ class Validation {
     }
   }
 
-  match(field, data, ruleValues) {
+  decimal(field, data, ruleValues) {
     if (data !== undefined) {
-      let message = i18n.__('validation.matches %s', i18n.__(`model.${field}`))
-      let values = ruleValues
+      let message = i18n.__('validation.decimal %s', i18n.__(`model.${field}`))
       if (Array.isArray(ruleValues)) {
         message = ruleValues.pop()
+      } else {
+        if (ruleValues !== true) {
+          message = ruleValues
+        }
       }
-      if (!validator.matches(data, values)) {
+      if (!validator.isDecimal(data)) {
         this.errors[field] = {
           message: message
         }
       }
     }
   }
+
+  match(field, data, ruleValues) {
+    if (data !== undefined) {
+      let message = i18n.__('validation.match %s', i18n.__(`model.${field}`))
+      let value = ruleValues
+      if (Array.isArray(ruleValues)) {
+        message = ruleValues.pop()
+        value = ruleValues[0]
+      }
+      if (!validator.matches(data, value)) {
+        this.errors[field] = {
+          message: message
+        }
+      }
+    }
+  }
+
+  unique(field, data, ruleValues) {
+    if (data !== undefined && data !== '') {
+      let message = i18n.__('validation.unique %s', i18n.__(`model.${field}`))
+      let Model = ruleValues
+      if (Array.isArray(ruleValues)) {
+        message = ruleValues.pop()
+        Model = ruleValues[0]
+      }
+      let obj = {}
+      obj[field] = data
+      let self = this
+
+      return Model.findOne(obj).then((model) => {
+        if (model) {
+          self.errors[field] = {
+            message: message
+          }
+        }
+      })
+    }
+  }
 }
 
 module.exports = Validation
-// let rawData = {
-//   username: '',
-//   email: 'john@email.com',
-//   age: '',
-//   category: '',
-//   skill: ''
-// }
-// let rules = {
-//   username: {
-//     required: true,
-//     // minlength: 1,
-//     maxlength: 10,
-//     notIn: ['admin', 'root', undefined],
-//   },
-//   email: {
-//     required: true,
-//     email: true,
-//     minlength: [5, 'Email min length must be 5']
-//   },
-//   age: {
-//     required: 'Age is required',
-//     numeric: true,
-//     min: 20,
-//     max: 100
-//   },
-//   category: {
-//     required: true,
-//     enum: ['food', 'sport', undefined]
-//   },
-//   skill: {
-//     required: true,
-//     match: '^lo'
-//   }
-// }
-// let v = new Validation(rawData, rules)
-// if (!v.validate()) {
-//   console.log(v.errors)
-// }

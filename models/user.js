@@ -77,7 +77,7 @@ UserSchema.statics.findByToken = function (token) {
   try {
     decoded = jwt.verify(token, config.salt)
   } catch (e) {
-    let error = new Error('Bad token')
+    let error = new Error(i18n.__('error.bad token'))
     error.status = 401
     return Promise.reject(error)
   }
@@ -95,7 +95,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
   return User.findOne({
     email
   }).then((user) => {
-    let error = new Error('Incorrect email or password')
+    let error = new Error(i18n.__('error.incorrect email or password'))
     error.status = 400
     if (!user) {
       return Promise.reject(error)
