@@ -7,6 +7,12 @@ router.get('/', (req, res) => {
   })
 })
 
+router.get('/chat', (req, res) => {
+  res.render('chat', {
+    title: 'Chat'
+  })
+})
+
 router.get('/about', (req, res) => {
   res.render('about', {
     title: 'About',

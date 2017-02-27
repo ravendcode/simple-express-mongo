@@ -1,4 +1,5 @@
 const path = require('path')
+const http = require('http')
 const express = require('express')
 const hbs = require('hbs')
 const morgan = require('morgan')
@@ -10,10 +11,21 @@ const db = require('./databases/connections/mongoose')
 
 const app = express()
 
+app.all('*', function (req, res, next) {
+  if (req.secure) {
+    return next()
+  }
+  res.redirect('https://' + req.hostname + ':' + config.httpsPort + req.url)
+})
+
+http.createServer(app).listen(config.httpPort)
+
 i18n.configure({
   locales: ['en', 'ru'],
-  defaultLocale: 'ru',
-  directory: path.join(__dirname, 'locales')
+  defaultLocale: config.locale,
+  directory: path.join(__dirname, 'locales'),
+  queryParameter: 'lang',
+  register: global
 })
 
 if (config.env === 'development') {
@@ -38,11 +50,6 @@ hbs.registerPartials(path.join(__dirname, 'views/partials'))
 require('./utils/hbs.util')(hbs)
 hbs.localsAsTemplateData(app)
 
-app.locals.app = {
-  env: config.env,
-  port: config.port
-}
-
 // Seeds
 if (config.env === 'development') {
   // require('./databases/seeds/users.seeder').usersSeeder(() => {
@@ -50,35 +57,35 @@ if (config.env === 'development') {
   // })
 }
 
-// Global middlewares
+// Middlewares
 app.use((req, res, next) => {
   req.db = db
+
+  app.locals.app = {
+    env: config.env,
+    httpPort: config.httpPort,
+    httpsPort: config.httpsPort,
+    host: config.host,
+    locale: res.getLocale()
+  }
+
   next()
 })
+
 // app.use(require('./middlewares/log.middleware'))
 
 // Routes
 require('./routes')(app)
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error(req.__('error.not found'))
   err.status = 404
   next(err)
 })
 
-// error handler
+// Error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  // res.locals.title = err.status
-  // res.locals.message = err.message
-  // res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-  // // render the error page
-  // res.status(err.status || 500)
-  // res.render('error')
-
-  // For API
   let message = err.message
   let status = err.status || 500
   let error = {

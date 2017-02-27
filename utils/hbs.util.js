@@ -1,3 +1,5 @@
+const i18n = require('i18n')
+
 module.exports = (hbs) => {
   var blocks = {}
 
@@ -23,5 +25,13 @@ module.exports = (hbs) => {
 
   hbs.registerHelper('toLower', (text) => {
     return text.toLowerCase()
+  })
+
+  hbs.registerHelper('__', function () {
+    return i18n.__.apply(this, arguments)
+  })
+
+  hbs.registerHelper('__n', function () {
+    return i18n.__n.apply(this, arguments)
   })
 }
