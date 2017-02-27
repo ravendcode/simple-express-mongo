@@ -10,5 +10,5 @@ indent_style = space
 [www]
 indent_size = 2
 
-[*.{js,json,html,hbs}]
+[*.{js,json,html,hbs,css,scss}]
 indent_size = 2

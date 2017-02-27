@@ -1,6 +1,6 @@
 const express = require('express')
 const _ = require('lodash')
-const authMiddleware = require('../../middlewares/auth.middleware')
+const authMdw = require('../../middlewares/auth.middleware')
 // const {
 //   ObjectID
 // } = require('mongodb')
@@ -17,7 +17,7 @@ const router = express.Router()
 //   }).catch((e) => next(e))
 // })
 
-router.get('/me', authMiddleware, (req, res, next) => {
+router.get('/me', authMdw, (req, res, next) => {
   res.send({
     user: req.user
   })
@@ -63,7 +63,7 @@ router.post('/login', (req, res, next) => {
   }).catch((e) => next(e))
 })
 
-router.delete('/me/token', authMiddleware, (req, res, next) => {
+router.delete('/me/token', authMdw, (req, res, next) => {
   req.user.removeToken(req.token).then(() => {
     res.status(200).send()
   }).catch((e) => next(e))

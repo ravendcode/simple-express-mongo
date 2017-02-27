@@ -4,10 +4,14 @@ module.exports = {
     'standard',
     'promise'
   ],
+  'globals': {
+    'io': true
+  },
   'env': {
     'node': true,
     'mocha': true,
-    'browser': true
+    'browser': true,
+    'jquery': true,
   },
   'parserOptions': {
     'ecmaVersion': 6,

@@ -1,8 +1,9 @@
 const utils = require('./utils')
 
-var env = process.env.NODE_ENV || 'development'
-// var env = 'production'
-var port = utils.normalizePort(process.env.PORT || 80)
+const env = process.env.NODE_ENV || 'development'
+// const env = 'production'
+const httpPort = 80
+const httpsPort = utils.normalizePort(process.env.PORT || 443)
 
 let mongoDbName = process.env.MONGODB_NAME || 'startexpress'
 // const mongoDbHost = process.env.MONGODB_HOST || 'localhost'
@@ -18,10 +19,15 @@ if (process.env.NODE_ENV === 'test') {
 // const mongoDbUri = process.env.MONGODB_URI || `mongodb://${mongoDbUser}:${mongoDbPassword}@${mongoDbHost}:${mongoDbPort}/${mongoDbName}`
 const mongoDbUri = process.env.MONGODB_URI || `mongodb://localhost/${mongoDbName}`
 const salt = process.env.SALT || '$2a$10$gK5iJIrl2/drnIpSOLdWpO'
+const host = process.env.HOST || 'app.dev'
+const locale = 'ru'
 
 module.exports = {
   env,
-  port,
+  httpPort,
+  httpsPort,
   mongoDbUri,
   salt,
+  host,
+  locale
 }

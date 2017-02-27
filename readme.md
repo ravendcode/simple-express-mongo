@@ -2,9 +2,9 @@
 
 ### Features
 1. API
-2. I18n
-3. JWT
-4. Middlewares
+2. HTTPS
+3. I18n
+4. JWT
 5. Mongoose
 6. Templates
 7. Tests
