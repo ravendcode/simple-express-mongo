@@ -1,9 +1,16 @@
+const path = require('path')
+const fs = require('fs')
 const utils = require('./utils')
 
 const env = process.env.NODE_ENV || 'development'
 // const env = 'production'
 const httpPort = 80
 const httpsPort = utils.normalizePort(process.env.PORT || 443)
+
+const httpsOptions = {
+  key: fs.readFileSync(path.join(__dirname, 'ssl/private.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'ssl/certificate.pem'))
+}
 
 let mongoDbName = process.env.MONGODB_NAME || 'startexpress'
 // const mongoDbHost = process.env.MONGODB_HOST || 'localhost'
@@ -25,6 +32,7 @@ const locale = 'ru'
 module.exports = {
   env,
   httpPort,
+  httpsOptions,
   httpsPort,
   mongoDbUri,
   salt,

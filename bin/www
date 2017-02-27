@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
 // const http = require('http')
-const path = require('path')
 const https = require('https')
-const fs = require('fs')
 const debug = require('debug')('app:server')
 const app = require('../app')
 const config = require('../config')
@@ -12,12 +10,7 @@ const port = config.httpsPort
 
 app.set('port', port)
 
-const options = {
-  key: fs.readFileSync(path.join(__dirname, '../ssl/private.key')),
-  cert: fs.readFileSync(path.join(__dirname, '../ssl/certificate.pem'))
-}
-
-const server = https.createServer(options, app)
+const server = https.createServer(config.httpsOptions, app)
 
 server.listen(port)
 server.on('error', onError)
@@ -58,6 +51,7 @@ function onListening() {
   debug(`env is ${config.env}`)
   var addr = server.address()
   var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
-  debug('listening on ' + bind)
+  debug('http redirect server listening on ' + config.httpPort)
+  debug('https server listening on ' + bind)
   // debug(`listening on ${config.host}:${config.port}`)
 }
