@@ -1,4 +1,4 @@
-const {generateMessage} = require('./utils/message')
+const {generateMessage, generateLocationMessage} = require('./utils/message')
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -16,6 +16,11 @@ module.exports = (io) => {
         createdAt: new Date().getTime()
       })
       cb('From server.')
+
+      socket.on('createLocationMessage', (coords) => {
+        io.emit('newLocationMessage', generateLocationMessage('Admin', coords))
+      })
+
       // socket.broadcast.emit('newMessage', {
       //   from: message.from,
       //   text: message.text,
