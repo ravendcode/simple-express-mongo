@@ -11,14 +11,18 @@ const db = require('./databases/connections/mongoose')
 
 const app = express()
 
-app.all('*', function (req, res, next) {
-  if (req.secure) {
-    return next()
-  }
-  res.redirect('https://' + req.hostname + ':' + config.httpsPort + req.url)
-})
+if (config.env === 'development') {
+  app.use(morgan('dev'))
 
-http.createServer(app).listen(config.httpPort)
+  // redirect http server
+  app.all('*', function (req, res, next) {
+    if (req.secure) {
+      return next()
+    }
+    res.redirect('https://' + req.hostname + ':' + config.httpsPort + req.url)
+  })
+  http.createServer(app).listen(config.httpPort)
+}
 
 i18n.configure({
   locales: ['en', 'ru'],
@@ -28,9 +32,6 @@ i18n.configure({
   register: global
 })
 
-if (config.env === 'development') {
-  app.use(morgan('dev'))
-}
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(i18n.init)
 app.use(bodyParser.json())
@@ -50,8 +51,8 @@ hbs.registerPartials(path.join(__dirname, 'views/partials'))
 require('./utils/hbs.util')(hbs)
 hbs.localsAsTemplateData(app)
 
-// Seeds
 if (config.env === 'development') {
+  // Seeds
   // require('./databases/seeds/users.seeder').usersSeeder(() => {
   //   require('./databases/seeds/todos.seeder').todosSeeder(() => {})
   // })
