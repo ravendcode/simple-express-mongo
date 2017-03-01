@@ -1,14 +1,23 @@
-<h1>Chat</h1>
+{{#extend 'styles'}}
+<link rel="stylesheet" href="/styles/chat.css">
+{{/extend}}
+<div class="chat">
+  <div class="chat__sidebar">
+    <h3>People</h3>
+    <div id="users"></div>
+  </div>
 
-<ol id="messages">
-
-</ol>
-
-<form action="" id="message-form">
-  <input type="text" name="message" placeholder="Message">
-  <button>Send</button>
-</form>
-<button id="send-location">Send Location</button>
+  <div class="chat__main">
+    <ol id="messages" class="chat__messages"></ol>
+    <div class="chat__footer">
+      <form action="" id="message-form">
+        <input type="text" name="message" placeholder="Message" autofocus autocomplete="off">
+        <button>Send</button>
+      </form>
+      <button id="send-location">Send location</button>
+    </div>
+  </div>
+</div>
 {{#extend 'scripts'}}
-  <script src="/scripts/chat.js"></script>
+<script src="/scripts/chat.js"></script>
 {{/extend}}
