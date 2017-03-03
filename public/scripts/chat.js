@@ -1,33 +1,68 @@
 var socket = io()
 socket.on('connect', function () {
-  console.log('Connection to server')
+  var params = $.deparam(window.location.search)
+  socket.emit('join', params, function (err) {
+    if (err) {
+      window.location.href = '/join-chat'
+    } else {
+
+    }
+  })
 })
 
 socket.on('disconnect', function () {
-  console.log('Disconect from server')
+
+})
+
+socket.on('updateUserList', function (users) {
+  var $ol = $('<ol>')
+  users.forEach(function (user) {
+    $ol.append($('<li>').text(user))
+  })
+
+  $('#users').html($ol)
 })
 
 socket.on('newMessage', function (message) {
-  var $li = $('<li>')
-  $li.text(message.from + ': ' + message.text)
+  var momentTime = moment(message.createdAt).format('H:mm:s')
+  var template = $('#message-template').html()
+  var html = Mustache.render(template, {
+    text: message.text,
+    from: message.from,
+    createdAt: momentTime
+  })
+  $('#messages').append(html)
+  scrollToBottom()
 
-  $('#messages').append($li)
+  // var $li = $('<li>')
+  // $li.text(momentTime + ' ' + message.from + ': ' + message.text)
+
+  // $('#messages').append($li)
 })
 
 socket.on('newLocationMessage', function (message) {
-  var $li = $('<li>')
-  var $a = $('<a target="_blank">My current location</a>')
-  $li.text(message.from + ': ')
-  $a.attr('href', message.url)
-  $li.append($a)
-  $('#messages').append($li)
+  var momentTime = moment(message.createdAt).format('H:mm:s')
+  var template = $('#location-message-template').html()
+  var html = Mustache.render(template, {
+    text: message.text,
+    from: message.from,
+    url: message.url,
+    createdAt: momentTime
+  })
+  $('#messages').append(html)
+  scrollToBottom()
+  // var $li = $('<li>')
+  // var $a = $('<a target="_blank">My current location</a>')
+  // $li.text(momentTime + ' ' + message.from + ': ')
+  // $a.attr('href', message.url)
+  // $li.append($a)
+  // $('#messages').append($li)
 })
 
 $('#message-form').on('submit', function (e) {
   e.preventDefault()
   var $input = $(this).find('[name=message]')
   socket.emit('createMessage', {
-    from: 'User',
     text: $input.val()
   }, function () {
     $input.val('')
@@ -53,3 +88,17 @@ $locationButton.on('click', function () {
     alert('Unable to fetch location.')
   })
 })
+
+
+function scrollToBottom() {
+  var messages = $('#messages')
+  var newMessage = messages.children('li:last-child')
+  var clientHeight = messages.prop('clientHeight')
+  var scrollTop = messages.prop('scrollTop')
+  var scrollHeight = messages.prop('scrollHeight')
+  var newMessageHeight = newMessage.innerHeight()
+  var lastMessageHeight = newMessage.prev().innerHeight()
+  if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    messages.scrollTop(scrollHeight)
+  }
+}

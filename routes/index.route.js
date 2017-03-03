@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const router = express.Router()
 
 router.get('/', (req, res) => {
@@ -8,9 +9,11 @@ router.get('/', (req, res) => {
 })
 
 router.get('/chat', (req, res) => {
-  res.render('chat', {
-    title: 'Chat'
-  })
+  res.sendFile(path.join(__dirname, '../public/chat.html'))
+})
+
+router.get('/join-chat', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/join.html'))
 })
 
 router.get('/about', (req, res) => {

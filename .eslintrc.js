@@ -5,7 +5,9 @@ module.exports = {
     'promise'
   ],
   'globals': {
-    'io': true
+    'io': true,
+    'moment': true,
+    'Mustache': true
   },
   'env': {
     'node': true,

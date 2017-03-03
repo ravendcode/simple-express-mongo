@@ -9,6 +9,7 @@
 6. Templates
 7. Tests
 8. Validation
+9. Chat on socket.io
 
 ### Usage
 1. Edit config.js
