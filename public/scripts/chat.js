@@ -89,7 +89,6 @@ $locationButton.on('click', function () {
   })
 })
 
-
 function scrollToBottom() {
   var messages = $('#messages')
   var newMessage = messages.children('li:last-child')
